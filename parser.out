@@ -1,0 +1,123 @@
+Created by PLY (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> programa
+Rule 1     programa -> cmds
+Rule 2     cmds -> cmd cmds
+Rule 3     cmds -> cmd
+Rule 4     cmd -> atribuicao
+Rule 5     atribuicao -> FACA var SER num PONTO
+
+Terminals, with rules where they appear
+
+FACA                 : 5
+PONTO                : 5
+SER                  : 5
+error                : 
+num                  : 5
+var                  : 5
+
+Nonterminals, with rules where they appear
+
+atribuicao           : 4
+cmd                  : 2 3
+cmds                 : 1 2
+programa             : 0
+
+
+state 0
+
+    (0) S' -> . programa
+    (1) programa -> . cmds
+    (2) cmds -> . cmd cmds
+    (3) cmds -> . cmd
+    (4) cmd -> . atribuicao
+    (5) atribuicao -> . FACA var SER num PONTO
+
+    FACA            shift and go to state 5
+
+    programa                       shift and go to state 1
+    cmds                           shift and go to state 2
+    cmd                            shift and go to state 3
+    atribuicao                     shift and go to state 4
+
+state 1
+
+    (0) S' -> programa .
+
+
+
+state 2
+
+    (1) programa -> cmds .
+
+    $end            reduce using rule 1 (programa -> cmds .)
+
+
+state 3
+
+    (2) cmds -> cmd . cmds
+    (3) cmds -> cmd .
+    (2) cmds -> . cmd cmds
+    (3) cmds -> . cmd
+    (4) cmd -> . atribuicao
+    (5) atribuicao -> . FACA var SER num PONTO
+
+    $end            reduce using rule 3 (cmds -> cmd .)
+    FACA            shift and go to state 5
+
+    cmd                            shift and go to state 3
+    cmds                           shift and go to state 6
+    atribuicao                     shift and go to state 4
+
+state 4
+
+    (4) cmd -> atribuicao .
+
+    FACA            reduce using rule 4 (cmd -> atribuicao .)
+    $end            reduce using rule 4 (cmd -> atribuicao .)
+
+
+state 5
+
+    (5) atribuicao -> FACA . var SER num PONTO
+
+    var             shift and go to state 7
+
+
+state 6
+
+    (2) cmds -> cmd cmds .
+
+    $end            reduce using rule 2 (cmds -> cmd cmds .)
+
+
+state 7
+
+    (5) atribuicao -> FACA var . SER num PONTO
+
+    SER             shift and go to state 8
+
+
+state 8
+
+    (5) atribuicao -> FACA var SER . num PONTO
+
+    num             shift and go to state 9
+
+
+state 9
+
+    (5) atribuicao -> FACA var SER num . PONTO
+
+    PONTO           shift and go to state 10
+
+
+state 10
+
+    (5) atribuicao -> FACA var SER num PONTO .
+
+    FACA            reduce using rule 5 (atribuicao -> FACA var SER num PONTO .)
+    $end            reduce using rule 5 (atribuicao -> FACA var SER num PONTO .)
+
