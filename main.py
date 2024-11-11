@@ -65,4 +65,5 @@ def p_error(regras):
 
 parser = yacc(debug=True) # construção do parser
 
-parser.parse("FACA b SER 3.") # execução do parser
+parseado = parser.parse("FACA b SER 3.") # execução do parser
+print(parseado)
