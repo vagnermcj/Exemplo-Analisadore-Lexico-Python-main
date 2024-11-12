@@ -2,7 +2,7 @@ from ply.lex import lex
 from ply.yacc import yacc
 
 reservados = ("FACA", "SER", "DOISPONTO", "PONTO", "MOSTRE", "SOME", "MULTIPLIQUE", 
-              "COM", "REPITA", "VEZES","FIM", "ENDIF", "SE", "ENTAO", "SENAO")
+              "COM", "REPITA", "VEZES","FIM", "SE", "ENTAO", "SENAO")
 
 t_FACA = r'FACA'
 t_SER = r'SER'
@@ -15,13 +15,12 @@ t_COM = r'COM'
 t_REPITA = r'REPITA'
 t_VEZES = r'VEZES'
 t_FIM = r'FIM'
-t_ENDIF = r'ENDIF'
 t_SE = r'SE'
 t_ENTAO = r'ENTAO'
 t_SENAO = r'SENAO'
 t_ignore = ' \t\n' # ignora espaços e tabs
 
-tokens = reservados + ('num', 'var')
+tokens = reservados + ("num", "var")
 
 def t_var(t):
     r'[a-zA-Z][a-zA-Z]*'
@@ -81,14 +80,14 @@ def p_atribuicao(regras):
 
 def p_condicao(regras):
     '''
-    condicao : SE var ENTAO cmds ENDIF
-        | SE var ENTAO cmds SENAO cmds ENDIF
+    condicao :  SE var ENTAO cmds SENAO cmds FIM 
+        | SE var ENTAO cmds FIM
     '''
 
-    if(len(regras) == 6):
-        regras[0] = "if(" + regras[2] + "){\n\t" + regras[4] + "\n\t}"
-    else:
+    if(regras[5] == "SENAO"):
         regras[0] = "if(" + regras[2] + "){\n\t" + regras[4] + "\n\t} else {\n\t" + regras[6] + "\n}\n"
+    else:
+        regras[0] = "if(" + regras[2] + "){\n\t" + regras[4] + "\n\t}"
       
 
 
@@ -131,6 +130,7 @@ def p_impressao(regras):
     impressao : MOSTRE var PONTO
         | MOSTRE operacao_soma PONTO
         | MOSTRE operacao_mult PONTO
+        | MOSTRE num PONTO
     '''
     regras[0] = f'printf("%d", {regras[2]});'
 
