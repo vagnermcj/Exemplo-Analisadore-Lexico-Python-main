@@ -2,7 +2,7 @@ from ply.lex import lex
 from ply.yacc import yacc
 
 reservados = ("FACA", "SER", "DOISPONTO", "PONTO", "MOSTRE", "SOME", "MULTIPLIQUE", 
-              "COM", "REPITA", "VEZES","FIM", "SE", "ENTAO", "SENAO")
+              "COM", "REPITA", "VEZES","FIM", "SE", "ENTAO", "SENAO", "POR")
 
 t_FACA = r'FACA'
 t_SER = r'SER'
@@ -18,9 +18,11 @@ t_FIM = r'FIM'
 t_SE = r'SE'
 t_ENTAO = r'ENTAO'
 t_SENAO = r'SENAO'
+t_POR = r'POR'
 t_ignore = ' \t\n' # ignora espaços e tabs
 
 tokens = reservados + ("num", "var")
+variaveis = []
 
 def t_var(t):
     r'[a-zA-Z][a-zA-Z]*'
@@ -75,8 +77,14 @@ def p_cmd(regras):
 def p_atribuicao(regras):
     '''
     atribuicao : FACA var SER num PONTO
+        | FACA var SER var PONTO
     '''
-    regras[0] = f"int {regras[2]} = {regras[4]};"
+    if(regras[2] in variaveis):
+        regras[0] = f"{regras[2]} = {regras[4]};"
+    else:
+        variaveis.append(regras[2])
+        regras[0] = f"int {regras[2]} = {regras[4]};"
+
 
 def p_condicao(regras):
     '''
@@ -115,9 +123,9 @@ def p_operacao_soma(regras):
 
 def p_operacao_mult(regras):
     '''
-    operacao_mult : MULTIPLIQUE var COM var PONTO
-        | MULTIPLIQUE var COM num PONTO
-        | MULTIPLIQUE num COM num PONTO
+    operacao_mult : MULTIPLIQUE var POR var PONTO
+        | MULTIPLIQUE var POR num PONTO
+        | MULTIPLIQUE num POR num PONTO
     '''
 
     if isinstance(regras[2], int):
@@ -153,6 +161,6 @@ def ler_arquivo_matemagica(nome_arquivo):
 
 parser = yacc(debug=True) # construção do parser
 
-matemagica = ler_arquivo_matemagica("./TestesMatemagica/test_case_5.txt")
+matemagica = ler_arquivo_matemagica("./TestesMatemagica/test_case_9.txt")
 parseado = parser.parse(matemagica) # execução do parser
 escrever_arquivo_c("Teste.c", parseado)
