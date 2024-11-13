@@ -140,7 +140,7 @@ def p_impressao(regras):
         | MOSTRE operacao_mult PONTO
         | MOSTRE num PONTO
     '''
-    regras[0] = f'printf("%d", {regras[2]});'
+    regras[0] = f'printf("%d\\n", {regras[2]});'
 
 def p_error(regras):
     print("Erro de sintaxe"+ str(regras))
@@ -161,6 +161,6 @@ def ler_arquivo_matemagica(nome_arquivo):
 
 parser = yacc(debug=True) # construção do parser
 
-matemagica = ler_arquivo_matemagica("./TestesMatemagica/test_case_9.txt")
+matemagica = ler_arquivo_matemagica("./TestesMatemagica/test_case_4.txt")
 parseado = parser.parse(matemagica) # execução do parser
 escrever_arquivo_c("Teste.c", parseado)
